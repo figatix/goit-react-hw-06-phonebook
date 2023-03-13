@@ -1,8 +1,10 @@
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
 import { ContactList } from "../ContactList/ContactList";
 import { Filter } from "../Filter/Filter";
 import { ContactForm } from "../Form/Form";
+// import { setFilterState } from "redux/actions";
 
 import { StyledMainTitle, StyledTitle, Wrapper } from "./App.styled";
 
@@ -11,6 +13,9 @@ const STORAGE_KEY = 'contacts';
 const App = () => {
   const [filter, setFilter] = useState('');
   const [contacts, setContacts] = useState(JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? [])
+
+  // const contactsState = useSelector(state => state.contacts)
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts))
@@ -36,6 +41,7 @@ const App = () => {
 
   const onChangeFilter = ({ target: { value } }) => {
     setFilter(value)
+    // dispatch(setFilterState(value))
   }
 
   const onDeleteBtnClick = (id) => {
@@ -64,6 +70,7 @@ const App = () => {
       <ContactList
         onDeleteBtnClick={onDeleteBtnClick}
         filteredContacts={filteredContacts}
+      // filteredContacts={contactsState}
       />
     </Wrapper>
   )
