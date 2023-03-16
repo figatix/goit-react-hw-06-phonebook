@@ -3,14 +3,17 @@ import React, { useState } from "react";
 import { StyledForm, StyledInput, StyledInputTitle, StyledLabel } from "./Form.styled";
 import { StyledAddBtn } from "../ContactItem/ContactItem.styled";
 
-import { useDispatch } from 'react-redux'
-import { addNewContact } from "redux/contactSlice";
+import { useDispatch, useSelector } from 'react-redux'
+import { addNewContact, getContactsState } from "redux/contactSlice";
+import { nanoid } from "@reduxjs/toolkit";
+
 
 
 const ContactForm = () => {
   const [name, setName] = useState('')
   const [number, setNumber] = useState('')
   const dispatch = useDispatch()
+  const contactsState = useSelector(getContactsState)
 
   const onChangeInput = (e) => {
     const { name, value } = e.target;
@@ -28,7 +31,22 @@ const ContactForm = () => {
       number,
     }
 
-    dispatch(addNewContact(newContact))
+    const isExist = contactsState.find(
+      person => person.name.toLowerCase() === name.toLowerCase().trim()
+    );
+    
+    if (isExist) {
+      alert(`${name} is already in contacts.`);
+      return ;
+    }
+
+    const finallyNewContact = {
+      id: nanoid(),
+      ...newContact,
+    };
+
+    
+    dispatch(addNewContact(finallyNewContact))
     reset()
   }
 
